@@ -41,6 +41,8 @@ class _HomescreenState extends State<Homescreen> {
 
       ],
       selectedItemColor: AppColors.yellow,
+      showUnselectedLabels: true,
+      showSelectedLabels: true,
       currentIndex: currentTabIndex,
       unselectedItemColor: AppColors.unselecteditem,
       onTap: (index){

@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:movies/ui/firstpage/Home.dart';
 import 'package:movies/ui/tab_favourit/favourite-tab.dart';
 import 'package:movies/ui/tab_moves/moves-tab.dart';
 import 'package:movies/ui/tab_search/search-tab.dart';
 import 'package:movies/utils/app-color.dart';
 
-class Home extends StatefulWidget {
+class Homescreen extends StatefulWidget {
   static const String routeName = "home";
-  const Home({super.key});
+  const Homescreen({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Homescreen> createState() => _HomescreenState();
 }
 
-class _HomeState extends State<Home> {
+class _HomescreenState extends State<Homescreen> {
   int currentTabIndex=0;
  Widget body=Home();
  List<Widget>tabs=[Home(),Search(),Movies(),Favorite()];

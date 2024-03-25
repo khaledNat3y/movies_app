@@ -19,7 +19,7 @@ class _SplashViewState extends State<SplashView> {
     Timer(
       const Duration(seconds: 2),
           () {
-        Navigator.pushReplacementNamed(context,Home.routeName);
+        Navigator.pushReplacementNamed(context,Homescreen.routeName);
       },
     );
 

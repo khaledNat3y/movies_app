@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:movies_app/ui/home.dart';
-=======
-import 'package:movies/ui/Home/homescreen.dart';
->>>>>>> fbf82f54a4ceea8d0041709c2b241e64546ffaf1
-
 void main() {
   runApp(const MyApp());
 }

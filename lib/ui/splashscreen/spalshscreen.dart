@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:movies_app/ui/home.dart';
+import 'package:movies/ui/home.dart';
+
 import 'package:flutter/material.dart';
 class SplashView extends StatefulWidget {
   static const String routeName = "Splash";
@@ -15,7 +16,7 @@ class _SplashViewState extends State<SplashView> {
     Timer(
       const Duration(seconds: 2),
           () {
-        Navigator.pushReplacementNamed(context, Home.routeName);
+        Navigator.pushReplacementNamed(context, Homescreen.routeName);
       },
     );
 

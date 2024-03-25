@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/ui/home.dart';
+import 'package:movies/ui/home.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -10,9 +10,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        Home.routeName: (_) => Home(),
+        Homescreen.routeName: (_) => Homescreen(),
       },
-      initialRoute: Home.routeName,
+      initialRoute: Homescreen.routeName,
     );
   }
 }

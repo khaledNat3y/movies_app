@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movies/ui/Home/homescreen.dart';
-
+import 'package:movies/ui/home.dart';
 void main() {
   runApp(const MyApp());
 }

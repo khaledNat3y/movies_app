@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:movies/ui/firstpage/Home.dart';
-import 'package:movies/ui/tab_favourit/favourite-tab.dart';
-import 'package:movies/ui/tab_moves/moves-tab.dart';
-import 'package:movies/ui/tab_search/search-tab.dart';
+
+import 'package:movies/ui/tabs/firestpage/firest-tab.dart';
+import 'package:movies/ui/tabs/tab_favourit/favourite-tab.dart';
+import 'package:movies/ui/tabs/tab_moves/moves-tab.dart';
+import 'package:movies/ui/tabs/tab_search/search-tab.dart';
 import 'package:movies/utils/app-color.dart';
 
 class Homescreen extends StatefulWidget {
@@ -15,14 +16,14 @@ class Homescreen extends StatefulWidget {
 
 class _HomescreenState extends State<Homescreen> {
   int currentTabIndex=0;
- Widget body=Home();
- List<Widget>tabs=[Home(),Search(),Movies(),Favorite()];
+  Widget body=firesttab();
+  List<Widget>tabs=[const firesttab(),const Search(),const Movies(),const Favorite()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.black,
-    body: body,
+      body: body,
       bottomNavigationBar: buildBottomNavigationBar(),
 
     );

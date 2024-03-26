@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/services.dart';
 import 'package:movies/ui/home.dart';
 
 import 'package:flutter/material.dart';
@@ -13,12 +14,10 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
-    Timer(
-      const Duration(seconds: 2),
-          () {
-        Navigator.pushReplacementNamed(context, Homescreen.routeName);
-      },
-    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    Future.delayed(Duration(seconds: 2),(){
+      Navigator.pushReplacementNamed(context, Homescreen.routeName);
+    });
 
     super.initState();
   }

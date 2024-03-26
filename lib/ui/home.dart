@@ -21,11 +21,13 @@ class _HomescreenState extends State<Homescreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.black,
-      body: body,
-      bottomNavigationBar: buildBottomNavigationBar(),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.black,
+        body: body,
+        bottomNavigationBar: buildBottomNavigationBar(),
 
+      ),
     );
   }
 

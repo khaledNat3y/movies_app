@@ -5,6 +5,9 @@ abstract class AppColors {
   static const Color white = Colors.white;
   static const Color transparent = Colors.transparent;
   static const Color lightbalck = Color(0xff514F4F);
+  static const Color contanercolor = Color(0xff282A28);
+
   static const Color yellow = Color(0xffFFBB3B);
   static const Color unselecteditem = Color(0xffC6C6C6);
+
 }

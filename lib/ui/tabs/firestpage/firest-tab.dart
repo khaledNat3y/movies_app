@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:movies/data/api_manger.dart';
 import 'package:movies/ui/commenwidget/errorviwe.dart';
@@ -15,9 +17,12 @@ class firesttab extends StatefulWidget {
 
 class _firesttabState extends State<firesttab> {
   String baseUrl = "https://image.tmdb.org/t/p/w500/";
+  Random random = Random();
+
 
   @override
   Widget build(BuildContext context) {
+    int index = random.nextInt(11);
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -38,17 +43,17 @@ class _firesttabState extends State<firesttab> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Image.network(
-                              "$baseUrl${snapshot.data!.results![0]
+                              "$baseUrl${snapshot.data!.results![index]
                                   .backdropPath}",
                               height: 217,
                             ),
                             Text(
-                              snapshot.data!.results![0].originalTitle ?? " ",
+                              snapshot.data!.results![index].originalTitle ?? " ",
                               style: TextStyle(color: Colors.white),
                               textAlign: TextAlign.end,
                             ),
                             Text(
-                              snapshot.data!.results![0].releaseDate ?? " ",
+                              snapshot.data!.results![index].releaseDate ?? " ",
                               style: TextStyle(color: Colors.white),
                               textAlign: TextAlign.end,
                             ),
@@ -67,13 +72,30 @@ class _firesttabState extends State<firesttab> {
                         Positioned.fill(
                           child: Align(
                               alignment: Alignment.bottomLeft,
-                              child: Image.network(
-                                "$baseUrl${snapshot.data!.results![0]
-                                    .backdropPath}",
-                                width: 100,
-                                height: 180,
-                              )),
+                              child: Container(
+                                margin: const EdgeInsets.fromLTRB(7, 7, 5, 6),
+                                child: Stack(
+                                  alignment: AlignmentDirectional.topStart,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: Image.network(
+                                        "$baseUrl${snapshot.data!.results![index]
+                                            .backdropPath}",
+                                        width: 120,
+                                        height: 160,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Container(
+                                        margin: EdgeInsets.fromLTRB(3, 0, 0, 0),
+                                        child: Image.asset("assets/bookmark.png"))
+                                  ],
+                                ),
+                              ),
+                              )
                         ),
+
                       ],
                     ),
                   );
@@ -83,7 +105,7 @@ class _firesttabState extends State<firesttab> {
               }),
           const SizedBox(height: 5),
           FutureBuilder(
-              future: ApiManager.popularFilm(),
+              future: ApiManager.NewRealeases(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return errorviwe(error: 'Something went wrong');
@@ -106,8 +128,7 @@ class _firesttabState extends State<firesttab> {
                             itemCount: snapshot.data!.results!.length,
                             itemBuilder: (context, index) {
                               return films(
-                                  "$baseUrl${snapshot.data!.results![index]
-                                      .backdropPath}");
+                                  "$baseUrl${snapshot.data!.results![index].backdropPath}");
                             },
                           ),
                         ),
@@ -120,7 +141,7 @@ class _firesttabState extends State<firesttab> {
               }),
           const SizedBox(height: 25),
           FutureBuilder(
-              future: ApiManager.popularFilm(),
+              future: ApiManager.Recommended(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return errorviwe(error: 'Something went wrong');

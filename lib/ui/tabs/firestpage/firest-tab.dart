@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:movies/data/api_manger.dart';
 import 'package:movies/ui/commenwidget/errorviwe.dart';
+import 'package:movies/ui/tabs/firestpage/detailfilmscreen.dart';
 import 'package:movies/utils/app-color.dart';
 
 import '../../commenwidget/apploader.dart';
@@ -31,72 +32,77 @@ class _firesttabState extends State<firesttab> {
               future: ApiManager.popularFilm(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return errorviwe(error: 'Something went wrong');
+                  return const errorviwe(error: 'Something went wrong');
                 } else if (snapshot.hasData) {
                   return Container(
                     margin: const EdgeInsets.all(8),
                     padding: const EdgeInsets.all(8),
                     width: double.infinity,
-                    child: Stack(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Image.network(
-                              "$baseUrl${snapshot.data!.results![index]
-                                  .backdropPath}",
-                              height: 217,
-                            ),
-                            Text(
-                              snapshot.data!.results![index].originalTitle ?? " ",
-                              style: TextStyle(color: Colors.white),
-                              textAlign: TextAlign.end,
-                            ),
-                            Text(
-                              snapshot.data!.results![index].releaseDate ?? " ",
-                              style: TextStyle(color: Colors.white),
-                              textAlign: TextAlign.end,
-                            ),
-                          ],
-                        ),
-                        const Positioned.fill(
-                          child: Align(
-                              alignment: Alignment.center,
-                              child: InkWell(
-                                  child: Icon(
-                                    Icons.play_circle,
-                                    size: 60,
-                                    color: Colors.white,
-                                  ))),
-                        ),
-                        Positioned.fill(
-                          child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Container(
-                                margin: const EdgeInsets.fromLTRB(7, 7, 5, 6),
-                                child: Stack(
-                                  alignment: AlignmentDirectional.topStart,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: Image.network(
-                                        "$baseUrl${snapshot.data!.results![index]
-                                            .backdropPath}",
-                                        width: 120,
-                                        height: 160,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    Container(
-                                        margin: EdgeInsets.fromLTRB(3, 0, 0, 0),
-                                        child: Image.asset("assets/bookmark.png"))
-                                  ],
-                                ),
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.pushNamed(context, Detailfilmscreen.routeName);
+                      },
+                      child: Stack(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Image.network(
+                                "$baseUrl${snapshot.data!.results![index]
+                                    .backdropPath}",
+                                height: 217,
                               ),
-                              )
-                        ),
+                              Text(
+                                snapshot.data!.results![index].originalTitle ?? " ",
+                                style: const TextStyle(color: Colors.white),
+                                textAlign: TextAlign.end,
+                              ),
+                              Text(
+                                snapshot.data!.results![index].releaseDate ?? " ",
+                                style: const TextStyle(color: Colors.white),
+                                textAlign: TextAlign.end,
+                              ),
+                            ],
+                          ),
+                          const Positioned.fill(
+                            child: Align(
+                                alignment: Alignment.center,
+                                child: InkWell(
+                                    child: Icon(
+                                      Icons.play_circle,
+                                      size: 60,
+                                      color: Colors.white,
+                                    ))),
+                          ),
+                          Positioned.fill(
+                            child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Container(
+                                  margin: const EdgeInsets.fromLTRB(7, 7, 5, 6),
+                                  child: Stack(
+                                    alignment: AlignmentDirectional.topStart,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Image.network(
+                                          "$baseUrl${snapshot.data!.results![index]
+                                              .backdropPath}",
+                                          width: 120,
+                                          height: 160,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Container(
+                                          margin: const EdgeInsets.fromLTRB(3, 0, 0, 0),
+                                          child: Image.asset("assets/bookmark.png"))
+                                    ],
+                                  ),
+                                ),
+                                )
+                          ),
 
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 } else {
@@ -108,7 +114,7 @@ class _firesttabState extends State<firesttab> {
               future: ApiManager.NewRealeases(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return errorviwe(error: 'Something went wrong');
+                  return const errorviwe(error: 'Something went wrong');
                 } else if (snapshot.hasData) {
                   return Container(
                     height: 200,
@@ -127,8 +133,13 @@ class _firesttabState extends State<firesttab> {
                             scrollDirection: Axis.horizontal,
                             itemCount: snapshot.data!.results!.length,
                             itemBuilder: (context, index) {
-                              return films(
-                                  "$baseUrl${snapshot.data!.results![index].backdropPath}");
+                              return InkWell(
+                                onTap: (){
+                                  Navigator.pushNamed(context, Detailfilmscreen.routeName);
+                                },
+                                child: films(
+                                    "$baseUrl${snapshot.data!.results![index].backdropPath}"),
+                              );
                             },
                           ),
                         ),
@@ -144,7 +155,7 @@ class _firesttabState extends State<firesttab> {
               future: ApiManager.Recommended(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return errorviwe(error: 'Something went wrong');
+                  return const errorviwe(error: 'Something went wrong');
                 }
                 else if (snapshot.hasData) {
                   return Container(
@@ -164,16 +175,21 @@ class _firesttabState extends State<firesttab> {
                             scrollDirection: Axis.horizontal,
                             itemCount: 10,
                             itemBuilder: (context, index) {
-                              return detailsfilm(
-                                  "$baseUrl${snapshot.data!.results![index]
-                                      .backdropPath}",
-                                  snapshot.data!.results![0].originalTitle ??
-                                      " ",
-                                  snapshot.data!.results![0].voteAverage
-                                      .toString() ?? " ",
-                                  snapshot.data!.results![0].releaseDate ?? " "
+                              return InkWell(
+                                onTap: (){
+                                  Navigator.pushNamed(context, Detailfilmscreen.routeName);
+                                },
+                                child: detailsfilm(
+                                    "$baseUrl${snapshot.data!.results![index]
+                                        .backdropPath}",
+                                    snapshot.data!.results![0].originalTitle ??
+                                        " ",
+                                    snapshot.data!.results![0].voteAverage
+                                        .toString() ?? " ",
+                                    snapshot.data!.results![0].releaseDate ?? " "
 
 
+                                ),
                               );
                             },
                           ),
@@ -209,7 +225,7 @@ Widget films(String path) {
           ),
         ),
         Container(
-            margin: EdgeInsets.fromLTRB(3, 0, 0, 0),
+            margin: const EdgeInsets.fromLTRB(3, 0, 0, 0),
             child: Image.asset("assets/bookmark.png"))
       ],
     ),
@@ -233,15 +249,15 @@ Widget detailsfilm(String path, String name, String rate, String date) {
             ),
             Text(
               "$rate",
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
             Text(
               name,
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
             Text(
               date,
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
           ],
         ),

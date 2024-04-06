@@ -90,7 +90,7 @@ class _firesttabState extends State<firesttab> {
                 } else if (snapshot.hasData) {
                   return Container(
                     height: 200,
-                    color: AppColors.containerColor,
+                    color: AppColors.contanercolor,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -128,7 +128,7 @@ class _firesttabState extends State<firesttab> {
                 else if (snapshot.hasData) {
                   return Container(
                     height: 220,
-                    color: AppColors.containerColor,
+                    color: AppColors.contanercolor,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -150,8 +150,9 @@ class _firesttabState extends State<firesttab> {
                                       " ",
                                   snapshot.data!.results![0].voteAverage
                                       .toString() ?? " ",
-                                  snapshot.data!.results![0].releaseDate ?? " ",
-                                context
+                                  snapshot.data!.results![0].releaseDate ?? " "
+
+
                               );
                             },
                           ),
@@ -194,7 +195,7 @@ Widget films(String path) {
   );
 }
 
-Widget detailsfilm(String path, String name, String rate, String date,BuildContext context) {
+Widget detailsfilm(String path, String name, String rate, String date) {
   return Container(
     color: AppColors.gray,
     margin: const EdgeInsets.fromLTRB(7, 7, 5, 6),
@@ -206,7 +207,7 @@ Widget detailsfilm(String path, String name, String rate, String date,BuildConte
             Image(
               image: NetworkImage(path),
               width: 80,
-              height: MediaQuery.of(context).size.height * 0.13,
+              height: 120,
               fit: BoxFit.cover,
             ),
             Text(

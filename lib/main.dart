@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies/ui/home.dart';
+import 'package:movies/ui/tabs/firestpage/detailfilmscreen.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -12,6 +13,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         Homescreen.routeName: (_) => Homescreen(),
+        Detailfilmscreen.routeName: (_) => Detailfilmscreen(),
       },
       initialRoute: Homescreen.routeName,
     );

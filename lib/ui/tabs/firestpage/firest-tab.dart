@@ -177,7 +177,7 @@ class _firesttabState extends State<firesttab> {
                             itemBuilder: (context, index) {
                               return InkWell(
                                 onTap: (){
-                                  Navigator.pushNamed(context, Detailfilmscreen.routeName);
+                                  Navigator.pushNamed(context, Detailfilmscreen.routeName,arguments: index);
                                 },
                                 child: detailsfilm(
                                     "$baseUrl${snapshot.data!.results![index]

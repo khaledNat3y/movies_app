@@ -25,7 +25,7 @@ class _HomescreenState extends State<Homescreen> {
         backgroundColor: AppColors.black,
         body: body,
         bottomNavigationBar: buildBottomNavigationBar(),
-      
+
       ),
     );
   }
@@ -46,7 +46,7 @@ class _HomescreenState extends State<Homescreen> {
       showUnselectedLabels: true,
       showSelectedLabels: true,
       currentIndex: currentTabIndex,
-      unselectedItemColor: AppColors.unselecteditem,
+      unselectedItemColor: AppColors.unselectedItem,
       onTap: (index){
         currentTabIndex=index;
         body = tabs[index];

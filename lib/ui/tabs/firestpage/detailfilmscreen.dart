@@ -60,10 +60,10 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                         alignment: Alignment.center,
                         child: InkWell(
                             child: Icon(
-                          Icons.play_circle,
-                          size: 60,
-                          color: Colors.white,
-                        ))),
+                              Icons.play_circle,
+                              size: 60,
+                              color: Colors.white,
+                            ))),
                   ),
                 ])),
             Container(
@@ -92,8 +92,8 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                       ),
                     ),
                     Text(
-                        "Having spent most of her life\n exploring the jungle,\n nothing could prepare Dora\n for her most dangerous \nadventure yet — high school. "
-                    ,style: TextStyle(color: Colors.white),
+                      "Having spent most of her life\n exploring the jungle,\n nothing could prepare Dora\n for her most dangerous \nadventure yet — high school. "
+                      ,style: TextStyle(color: Colors.white),
                     )
                   ],
                 ),
@@ -107,7 +107,7 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                   } else if (snapshot.hasData) {
                     return Container(
                       height: 220,
-                      color: AppColors.contanercolor,
+                      color: AppColors.containerColor,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -127,7 +127,7 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                                     snapshot.data!.results![0].originalTitle ??
                                         " ",
                                     snapshot.data!.results![0].voteAverage
-                                            .toString() ??
+                                        .toString() ??
                                         " ",
                                     snapshot.data!.results![0].releaseDate ??
                                         " ");

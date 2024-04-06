@@ -90,7 +90,7 @@ class _firesttabState extends State<firesttab> {
                 } else if (snapshot.hasData) {
                   return Container(
                     height: 200,
-                    color: AppColors.contanercolor,
+                    color: AppColors.containerColor,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -128,7 +128,7 @@ class _firesttabState extends State<firesttab> {
                 else if (snapshot.hasData) {
                   return Container(
                     height: 220,
-                    color: AppColors.contanercolor,
+                    color: AppColors.containerColor,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

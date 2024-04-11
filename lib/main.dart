@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:movies/prvider/listprovider.dart';
 import 'package:movies/ui/home.dart';
 import 'package:movies/ui/tabs/firestpage/detailfilmscreen.dart';
+import 'package:movies/ui/tabs/tab_moves/Moviecaroctroy.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -32,6 +33,8 @@ class MyApp extends StatelessWidget {
       routes: {
         Homescreen.routeName: (_) => const Homescreen(),
         Detailfilmscreen.routeName: (_) => const Detailfilmscreen(),
+        Moviecatogery.routeName: (_) => const Moviecatogery(),
+
       },
       initialRoute: Homescreen.routeName,
     );

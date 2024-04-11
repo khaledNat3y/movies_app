@@ -45,14 +45,14 @@ class _firesttabState extends State<firesttab> {
 
                   return GestureDetector(
                     onTap: () {
-                      // Navigate to Detailfilmscreen.routeName
                       Navigator.pushNamed(context, Detailfilmscreen.routeName,
                           arguments: datafilm(
                               titel: film.title ?? " ",
                               path: "$baseUrl${film.backdropPath}",
-                              content: film.originalTitle ?? " ",
+                              content: film.overview ?? " ",
                               date: film.releaseDate ?? " ",
-                              issave: false
+                              issave: false,
+                            rate: film.voteAverage.toString()
                           )
                       );
                     },

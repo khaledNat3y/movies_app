@@ -15,7 +15,7 @@ class Homescreen extends StatefulWidget {
 
 class _HomescreenState extends State<Homescreen> {
   int currentTabIndex=0;
-  Widget body=Movies();
+  Widget body=firesttab();
   List<Widget>tabs=[const firesttab(),const Search(),const Movies(),const Favorite()];
 
   @override

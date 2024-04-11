@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movies/ui/commenwidget/apploader.dart';
 import 'package:movies/ui/commenwidget/errorviwe.dart';
+import 'package:movies/ui/tabs/tab_moves/Moviecaroctroy.dart';
 import '../../../data/api_manger.dart';
 
 class Movies extends StatefulWidget {
@@ -37,9 +38,8 @@ class _MoviesState extends State<Movies> {
                   ),
                   itemCount: snapshot.data?.genres?.length ?? 0, // Handle null safety
                   itemBuilder: (context, index) {
-                    // Ensure data is not null
                     final genreName = snapshot.data?.genres?[index].name ?? '';
-                    return CategoryWidget(genreName);
+                    return CategoryWidget(genreName,snapshot.data!.genres![index].id??0);
                   },
                 );
               } else {
@@ -53,20 +53,34 @@ class _MoviesState extends State<Movies> {
     );
   }
 
-  Widget CategoryWidget(String name) {
-    return Container(
-      child: Stack(
-        children: [
-          Image.asset("assets/0e34a5e080e8c915030603ddcdb4eeba.png"),
-          Positioned(
-            bottom: 8, // Positioning the text
-            left: 8,
-            child: Text(
-              name,
-              style: TextStyle(color: Colors.white),
+  Widget CategoryWidget(String name,int id) {
+    return InkWell(
+      onTap: (){
+        Navigator.pushNamed(context, Moviecatogery.routeName,arguments: id);
+
+      },
+      child: Container(
+        child: Stack(
+          children: [
+            Positioned.fill(
+
+                child:Align(
+                    alignment: Alignment.center,
+
+                    child: Image.asset("assets/0e34a5e080e8c915030603ddcdb4eeba.png"))),
+            Center(
+              child: Positioned.fill(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    name,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

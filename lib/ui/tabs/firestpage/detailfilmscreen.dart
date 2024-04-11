@@ -48,14 +48,14 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                         height: 217,
                       ),
                        Text(
-                        data.content,
+                        data.titel,
                         style: const TextStyle(color: Colors.white),
-                        textAlign: TextAlign.end,
+                        textAlign: TextAlign.left,
                       ),
                        Text(
                         data.date,
                         style: const TextStyle(color: Colors.white),
-                        textAlign: TextAlign.end,
+                        textAlign: TextAlign.left,
                       ),
                     ],
                   ),
@@ -71,36 +71,46 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                   ),
                 ])),
             Container(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(7, 7, 5, 6),
-                      child: Stack(
-                        alignment: AlignmentDirectional.topStart,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: Image.network(
-                              data.path,
-                              width: 120,
-                              height: 160,
-                              fit: BoxFit.cover,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(7, 7, 5, 6),
+                    child: Stack(
+                      alignment: AlignmentDirectional.topStart,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Positioned.fill(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Image.network(
+                                data.path,
+                                width: 120,
+                                height: 160,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                          Container(
-                              margin: const EdgeInsets.fromLTRB(3, 0, 0, 0),
-                              child: Image.network(data.path))
+
+                        ),
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          child: Image.asset(
+                            "assets/bookmark.png",
+                          ),
+                        ),
                         ],
-                      ),
                     ),
-                     Text(
-                      data.content
+                  ),
+                   Expanded(
+                     child: Text(
+                      "${data.content}\n${data.rate}"
                       ,style: TextStyle(color: Colors.white),
-                    )
-                  ],
-                ),
+                  ),
+                   )
+                ],
               ),
             ),
             FutureBuilder(

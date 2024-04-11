@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/data/api_manger.dart';
 import 'package:movies/ui/commenwidget/errorviwe.dart';
@@ -143,16 +144,19 @@ class _firesttabState extends State<firesttab> {
                             scrollDirection: Axis.horizontal,
                             itemCount: 10,
                             itemBuilder: (context, index) {
-                              return detailsfilm(
-                                  "$baseUrl${snapshot.data!.results![index]
-                                      .backdropPath}",
-                                  snapshot.data!.results![0].originalTitle ??
-                                      " ",
-                                  snapshot.data!.results![0].voteAverage
-                                      .toString() ?? " ",
-                                  snapshot.data!.results![0].releaseDate ?? " "
+                              return SingleChildScrollView(
+                                physics: const NeverScrollableScrollPhysics(),
+                                child: detailsfilm(
+                                    "$baseUrl${snapshot.data!.results![index]
+                                        .backdropPath}",
+                                    snapshot.data!.results![0].originalTitle ??
+                                        " ",
+                                    snapshot.data!.results![0].voteAverage
+                                        .toString() ?? " ",
+                                    snapshot.data!.results![0].releaseDate ?? " "
 
 
+                                ),
                               );
                             },
                           ),

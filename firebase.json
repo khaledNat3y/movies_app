@@ -1,1 +1,23 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"movies-app-9917c","appId":"1:583921155202:android:10d410485e98af827b089b","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"movies-app-9917c","configurations":{"android":"1:583921155202:android:10d410485e98af827b089b","ios":"1:583921155202:ios:6f53100843a045457b089b","web":"1:583921155202:web:1d13586ce4bdbdab7b089b"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "movies-app-9917c",
+          "appId": "1:583921155202:android:10d410485e98af827b089b",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "movies-app-9917c",
+          "configurations": {
+            "android": "1:583921155202:android:10d410485e98af827b089b",
+            "ios": "1:583921155202:ios:6f53100843a045457b089b",
+            "web": "1:583921155202:web:1d13586ce4bdbdab7b089b"
+          }
+        }
+      }
+    }
+  }
+}

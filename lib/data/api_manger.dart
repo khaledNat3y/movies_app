@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:movies/model/recomendresponse.dart';
@@ -54,4 +55,5 @@ abstract class ApiManager {
       rethrow;
     }
   }
+
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies/model/data-film.dart';
 
 import '../../../data/api_manger.dart';
 import '../../../utils/app-color.dart';
@@ -8,6 +9,7 @@ import '../../commenwidget/errorviwe.dart';
 class Detailfilmscreen extends StatefulWidget {
   static const String routeName = "detailfilmscreen";
 
+
   const Detailfilmscreen({super.key});
 
   @override
@@ -16,16 +18,18 @@ class Detailfilmscreen extends StatefulWidget {
 
 class _DetailfilmscreenState extends State<Detailfilmscreen> {
   String baseUrl = "https://image.tmdb.org/t/p/w500/";
+  bool issave=false;
 
   @override
   Widget build(BuildContext context) {
+    datafilm data=ModalRoute.of(context)!.settings.arguments as datafilm;
     return Scaffold(
       backgroundColor: AppColors.black,
       appBar: AppBar(
         backgroundColor: AppColors.black,
         title: Text(
-          "the dora film",
-          style: TextStyle(color: Colors.white),
+          data.titel,
+          style: const TextStyle(color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
@@ -39,18 +43,18 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Image.asset(
-                        "assets/Image (1).png",
+                      Image.network(
+                        data.path,
                         height: 217,
                       ),
-                      const Text(
-                        "Dora and the lost city of gold",
-                        style: TextStyle(color: Colors.white),
+                       Text(
+                        data.content,
+                        style: const TextStyle(color: Colors.white),
                         textAlign: TextAlign.end,
                       ),
-                      const Text(
-                        "2019  PG-13  2h 7m",
-                        style: TextStyle(color: Colors.white),
+                       Text(
+                        data.date,
+                        style: const TextStyle(color: Colors.white),
                         textAlign: TextAlign.end,
                       ),
                     ],
@@ -60,10 +64,10 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                         alignment: Alignment.center,
                         child: InkWell(
                             child: Icon(
-                          Icons.play_circle,
-                          size: 60,
-                          color: Colors.white,
-                        ))),
+                              Icons.play_circle,
+                              size: 60,
+                              color: Colors.white,
+                            ))),
                   ),
                 ])),
             Container(
@@ -78,8 +82,8 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(5),
-                            child: Image.asset(
-                              "assets/Image.png",
+                            child: Image.network(
+                              data.path,
                               width: 120,
                               height: 160,
                               fit: BoxFit.cover,
@@ -87,13 +91,13 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                           ),
                           Container(
                               margin: const EdgeInsets.fromLTRB(3, 0, 0, 0),
-                              child: Image.asset("assets/bookmark.png"))
+                              child: Image.network(data.path))
                         ],
                       ),
                     ),
-                    Text(
-                        "Having spent most of her life\n exploring the jungle,\n nothing could prepare Dora\n for her most dangerous \nadventure yet — high school. "
-                    ,style: TextStyle(color: Colors.white),
+                     Text(
+                      data.content
+                      ,style: TextStyle(color: Colors.white),
                     )
                   ],
                 ),
@@ -107,7 +111,7 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                   } else if (snapshot.hasData) {
                     return Container(
                       height: 220,
-                      color: AppColors.contanercolor,
+                      color: AppColors.containerColor,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -123,13 +127,13 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                               itemCount: 10,
                               itemBuilder: (context, index) {
                                 return detailsfilm(
-                                    "$baseUrl${snapshot.data!.results![index].backdropPath}",
-                                    snapshot.data!.results![0].originalTitle ??
+                                    "$baseUrl${snapshot.data!.results![index+1].backdropPath}",
+                                    snapshot.data!.results![index+1].originalTitle ??
                                         " ",
-                                    snapshot.data!.results![0].voteAverage
-                                            .toString() ??
+                                    snapshot.data!.results![index+1].voteAverage
+                                        .toString() ??
                                         " ",
-                                    snapshot.data!.results![0].releaseDate ??
+                                    snapshot.data!.results![index+1].releaseDate ??
                                         " ");
                               },
                             ),
@@ -149,6 +153,7 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
 
   Widget detailsfilm(String path, String name, String rate, String date) {
     return Container(
+
       color: AppColors.gray,
       margin: const EdgeInsets.fromLTRB(7, 7, 5, 6),
       child: Stack(
@@ -176,9 +181,17 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
               ),
             ],
           ),
-          Container(
-              margin: const EdgeInsets.fromLTRB(3, 0, 0, 0),
-              child: Image.asset("assets/bookmark.png"))
+          InkWell(
+            onTap: (){
+              setState(() {
+                issave=true;
+
+              });
+            },
+            child: Container(
+                margin: const EdgeInsets.fromLTRB(3, 0, 0, 0),
+                child: Image.asset(issave?"assets/bookmarktrue.png":"assets/bookmark.png")),
+          )
         ],
       ),
     );

@@ -7,18 +7,15 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        Homescreen.routeName: (_) => Homescreen(),
-        Detailfilmscreen.routeName: (_) => Detailfilmscreen(),
+        Homescreen.routeName: (_) => const Homescreen(),
+        Detailfilmscreen.routeName: (_) => const Detailfilmscreen(),
       },
       initialRoute: Homescreen.routeName,
     );
   }
 }
-

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
 import 'package:movies/ui/tabs/firestpage/firest-tab.dart';
 import 'package:movies/ui/tabs/tab_favourit/favourite-tab.dart';
 import 'package:movies/ui/tabs/tab_moves/moves-tab.dart';
 import 'package:movies/ui/tabs/tab_search/search-tab.dart';
-import 'package:movies/utils/app-color.dart';
-
+import '../utils/app-color.dart';
+// import 'package:movies_app/utils/app-color.dart';
 class Homescreen extends StatefulWidget {
   static const String routeName = "home";
   const Homescreen({super.key});
@@ -47,7 +46,7 @@ class _HomescreenState extends State<Homescreen> {
       showUnselectedLabels: true,
       showSelectedLabels: true,
       currentIndex: currentTabIndex,
-      unselectedItemColor: AppColors.unselecteditem,
+      unselectedItemColor: AppColors.unselectedItem,
       onTap: (index){
         currentTabIndex=index;
         body = tabs[index];

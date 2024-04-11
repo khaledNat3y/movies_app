@@ -1,4 +1,5 @@
 class datafilm{
+  static const collectionname="film";
   String path;
   String titel;
   String content;

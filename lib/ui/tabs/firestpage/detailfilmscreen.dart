@@ -100,7 +100,7 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
               ),
             ),
             FutureBuilder(
-                future: ApiManager.Recommended(),
+                future: ApiManager.recommended(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return const errorviwe(error: 'Something went wrong');

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:movies/data/api_manger.dart';
 import 'package:movies/utils/app-color.dart';
 import '../../../model/popularresponce.dart';
-import '../../commenwidget/apploader.dart';
-import '../../commenwidget/errorviwe.dart';
 
 class Search extends StatefulWidget {
   static const String routeName = "search";
@@ -36,7 +34,7 @@ class _SearchState extends State<Search> {
 
       setState(() {
         // Store the fetched films in the filmsList
-        filmsList = popularFilms.results!.cast<Results?>();
+        filmsList = popularFilms.results!.cast<Results>();
         // Assign filmsList to allFilms initially
         allFilms = filmsList.cast<Results>();
       });
@@ -49,7 +47,7 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -67,28 +65,28 @@ class _SearchState extends State<Search> {
                   },
                   decoration: InputDecoration(
                     hintText: 'Search',
-                    hintStyle: TextStyle(color: AppColors.gray),
+                    hintStyle: const TextStyle(color: AppColors.gray),
                     filled: true,
                     fillColor: AppColors.lightGray,
-                    prefixIcon: Icon(Icons.search, color: AppColors.white,),
+                    prefixIcon: const Icon(Icons.search, color: AppColors.white,),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 1,color: AppColors.white),
+                      borderSide: const BorderSide(width: 1,color: AppColors.white),
                       borderRadius: BorderRadius.circular(40),
                     ),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(width: 1,color: AppColors.white),
+                      borderSide: const BorderSide(width: 1,color: AppColors.white),
                       borderRadius: BorderRadius.circular(40),
                     ),
                     focusColor: AppColors.white,
                     focusedBorder:OutlineInputBorder(
-                      borderSide: BorderSide(width: 1,color: AppColors.white),
+                      borderSide: const BorderSide(width: 1,color: AppColors.white),
                       borderRadius: BorderRadius.circular(40),
                     ),
                   ),
-                  style: TextStyle(color: AppColors.white,fontSize: 15),
+                  style: const TextStyle(color: AppColors.white,fontSize: 15),
                   cursorColor: AppColors.white,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Container(
@@ -137,7 +135,7 @@ class _SearchState extends State<Search> {
 
   Widget filmDetails(String path, String name, String overView, String date) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.transparent,
         border: Border(
           bottom: BorderSide(width: 1.0, color: AppColors.white),
@@ -145,7 +143,7 @@ class _SearchState extends State<Search> {
       ),
       width: 100,
       margin: const EdgeInsets.all(8),
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 7),
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 7),
       child: Row(
         children: [
           ClipRRect(
@@ -157,7 +155,7 @@ class _SearchState extends State<Search> {
               fit: BoxFit.cover,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 5,
           ),
           Expanded(
@@ -166,17 +164,17 @@ class _SearchState extends State<Search> {
               children: [
                 Text(
                   name,
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
                 Text(
                   date,
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
                 Text(
                   overView,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
               ],
             ),

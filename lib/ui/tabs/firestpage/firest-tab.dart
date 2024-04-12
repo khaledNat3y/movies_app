@@ -177,6 +177,8 @@ class _firesttabState extends State<firesttab> {
       onTap: () {
         setState(() {
           bookmarks[title] = !bookmarks[title]!;
+          Addfilm( "$baseUrl${film.backdropPath}", film.originalTitle??" ", film.overview, film.releaseDate ?? " ");
+
         });
 
       },
@@ -187,11 +189,25 @@ class _firesttabState extends State<firesttab> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(5),
-              child: Image.network(
-                "$baseUrl${film.backdropPath}",
-                width: 120,
-                height: 200,
-                fit: BoxFit.cover,
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, Detailfilmscreen.routeName,
+                      arguments: datafilm(
+                          titel: film.title ?? " ",
+                          path: "$baseUrl${film.backdropPath}",
+                          content: film.overview ?? " ",
+                          date: film.releaseDate ?? " ",
+                          issave: false,
+                          rate: film.voteAverage.toString()
+                      )
+                  );
+                },
+                child: Image.network(
+                  "$baseUrl${film.backdropPath}",
+                  width: 120,
+                  height: 200,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Positioned(
@@ -201,6 +217,8 @@ class _firesttabState extends State<firesttab> {
                 onTap: () {
                   setState(() {
                     bookmarks[title] = !bookmarks[title]!;
+
+
                   });
                 },
                 child: Image.asset(
@@ -217,7 +235,7 @@ class _firesttabState extends State<firesttab> {
   Widget detailsFilm(String path, String name, String rate, String date,String overView) {
     return Container(
       width: 100,
-      height: 150,
+      height: 170,
       color: AppColors.gray,
       margin: const EdgeInsets.fromLTRB(7, 7, 5, 6),
       child: Stack(
@@ -225,11 +243,25 @@ class _firesttabState extends State<firesttab> {
         children: [
           Column(
             children: [
-              Image.network(
-                path,
-                width: 80,
-                height: 105,
-                fit: BoxFit.cover,
+              InkWell(
+                onTap: (){
+                  Navigator.pushNamed(context, Detailfilmscreen.routeName,
+                      arguments: datafilm(
+                          titel: name,
+                          path: path,
+                          content: overView ?? " ",
+                          date: date,
+                          issave: false,
+                          rate: rate
+                      )
+                  );
+                },
+                child: Image.network(
+                  path,
+                  width: 100,
+                  height: 120,
+                  fit: BoxFit.cover,
+                ),
               ),
               Row(
                 children: [
@@ -261,6 +293,7 @@ class _firesttabState extends State<firesttab> {
               onTap: () {
                 setState(() {
                   bookmarks[name] = !bookmarks[name]!;
+                  Addfilm(path, name, overView, date);
                 });
               },
               child: Image.asset(
@@ -272,6 +305,25 @@ class _firesttabState extends State<firesttab> {
       ),
     );
   }
+
+
+  void Addfilm(String path,String title,String overviwe,String data) async {
+
+      CollectionReference todocollection =
+      FirebaseFirestore.instance.collection("movies");
+      var docs = todocollection.doc();
+      docs.set({
+      "titel": title,
+      "overView":overviwe,
+      "data":data,
+      "path":"$baseUrl$path"
+      }).timeout(const Duration(milliseconds: 300), onTimeout: () {
+        provider.gettaskinfiarbase();
+        Navigator.pop(context);
+      });
+    }
+
+
 
 }
 

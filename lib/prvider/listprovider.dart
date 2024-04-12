@@ -19,7 +19,7 @@ class Listprovider extends ChangeNotifier {
   void gettaskinfiarbase() async {
     films.clear();
     CollectionReference filmcollection =
-        FirebaseFirestore.instance.collection(datafilm.collectionname);
+        FirebaseFirestore.instance.collection("movies");
     QuerySnapshot querySnapshot = await filmcollection.get();
     var documents = querySnapshot.docs;
     for (var doc in documents) {

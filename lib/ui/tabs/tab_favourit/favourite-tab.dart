@@ -1,11 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:movies/prvider/listprovider.dart';
+import 'package:movies/ui/tabs/tab_favourit/filmwidget.dart';
+import 'package:provider/provider.dart';
 
-class Favorite extends StatelessWidget {
+import '../../../model/model.dart';
+import '../../../utils/app-color.dart';
 
-  const Favorite({super.key});
+class Favorite extends StatefulWidget {
+
+  const Favorite({super.key, });
+
+  @override
+  State<Favorite> createState() => _FavoriteState();
+}
+
+class _FavoriteState extends State<Favorite> {
+  late Listprovider provider;
+  void initState() {
+    // TODO: implement initState
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      provider.gettaskinfiarbase();
+
+    });
+
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    provider = Provider.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          padding: EdgeInsets.all(10),
+          child: const Text(
+            "Watchlist",
+            style: TextStyle(color: Colors.white, fontSize: 35),
+            textAlign: TextAlign.left,
+          ),
+        ),
+        Expanded(
+            child: ListView.builder(
+                itemCount: provider.films.length,
+                itemBuilder: (context, index) {
+                  return Filmwidget(film: provider.films[index]);
+
+                }))
+      ],
+    );
   }
+
 }

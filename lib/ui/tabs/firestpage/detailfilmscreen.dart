@@ -9,7 +9,6 @@ import '../../commenwidget/errorviwe.dart';
 class Detailfilmscreen extends StatefulWidget {
   static const String routeName = "detailfilmscreen";
 
-
   const Detailfilmscreen({super.key});
 
   @override
@@ -18,11 +17,22 @@ class Detailfilmscreen extends StatefulWidget {
 
 class _DetailfilmscreenState extends State<Detailfilmscreen> {
   String baseUrl = "https://image.tmdb.org/t/p/w500/";
-  bool issave=false;
+  bool issave = false;
+  final Map<String, bool> bookmarks = {};
 
   @override
   Widget build(BuildContext context) {
-    datafilm data=ModalRoute.of(context)!.settings.arguments as datafilm;
+    final datafilm? data = ModalRoute.of(context)?.settings.arguments as datafilm?;
+
+    if (data == null) {
+      return Scaffold(
+        body: Center(
+          child: Text('No data found', style: TextStyle(color: Colors.white)),
+        ),
+        backgroundColor: AppColors.black,
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.black,
       appBar: AppBar(
@@ -39,37 +49,41 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                 margin: const EdgeInsets.all(8),
                 padding: const EdgeInsets.all(8),
                 width: double.infinity,
-                child: Stack(children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Image.network(
-                        data.path,
-                        height: 217,
-                      ),
-                       Text(
-                        data.titel,
-                        style: const TextStyle(color: Colors.white),
-                        textAlign: TextAlign.left,
-                      ),
-                       Text(
-                        data.date,
-                        style: const TextStyle(color: Colors.white),
-                        textAlign: TextAlign.left,
-                      ),
-                    ],
-                  ),
-                  const Positioned.fill(
-                    child: Align(
+                child: Stack(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Image.network(
+                          data.path,
+                          height: 217,
+                        ),
+                        Text(
+                          data.titel,
+                          style: const TextStyle(color: Colors.white),
+                          textAlign: TextAlign.left,
+                        ),
+                        Text(
+                          data.date,
+                          style: const TextStyle(color: Colors.white),
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    ),
+                    const Positioned.fill(
+                      child: Align(
                         alignment: Alignment.center,
                         child: InkWell(
-                            child: Icon(
-                              Icons.play_circle,
-                              size: 60,
-                              color: Colors.white,
-                            ))),
-                  ),
-                ])),
+                          child: Icon(
+                            Icons.play_circle,
+                            size: 60,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
             Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -92,7 +106,6 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                               ),
                             ),
                           ),
-
                         ),
                         Positioned(
                           top: 0,
@@ -101,87 +114,88 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                             "assets/bookmark.png",
                           ),
                         ),
-                        ],
+                      ],
                     ),
                   ),
-                   Expanded(
-                     child: Column(
-                       children: [
-                         Text(
-                          "${data.content}\n"
-                          ,style: TextStyle(color: Colors.white),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text(
+                          "${data.content}\n",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Row(
+                          children: [
+                            Image.asset("assets/star-2.png", height: 16, width: 16),
+                            Text(
+                              data.rate,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                         Row(
-
-                           children: [
-                             Image.asset("assets/star-2.png",height: 16,width: 16,),
-                             Text(
-                               data.rate,
-                               style: const TextStyle(color: Colors.white),
-                             ),
-                           ],
-                         ),
-                       ],
-                     ),
-
-                   ),
-
                 ],
               ),
             ),
             FutureBuilder(
-                future: ApiManager.recommended(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return const errorviwe(error: 'Something went wrong');
-                  } else if (snapshot.hasData) {
-                    return Container(
-                      height: 220,
-                      color: AppColors.containerColor,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 8),
-                            child: Text("More Like This",
-                                style: TextStyle(color: Colors.white)),
+              future: ApiManager.recommended(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const errorviwe(error: 'Something went wrong');
+                } else if (snapshot.hasData) {
+                  return Container(
+                    height: 220,
+                    color: AppColors.containerColor,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 8),
+                          child: Text("More Like This",
+                              style: TextStyle(color: Colors.white)),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data?.results?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              if (index + 1 >= snapshot.data!.results!.length) {
+                                return Container();
+                              }
+
+                              final result = snapshot.data!.results![index + 1];
+
+                              return detailsFilm(
+                                "$baseUrl${result.backdropPath ?? ''}",
+                                result.originalTitle ?? " ",
+                                result.voteAverage?.toString() ?? " ",
+                                result.releaseDate ?? " ",
+                                result.overview ?? " ",
+                              );
+                            },
                           ),
-                          Expanded(
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 10,
-                              itemBuilder: (context, index) {
-                                return detailsfilm(
-                                    "$baseUrl${snapshot.data!.results![index+1].backdropPath}",
-                                    snapshot.data!.results![index+1].originalTitle ??
-                                        " ",
-                                    snapshot.data!.results![index+1].voteAverage
-                                        .toString() ??
-                                        " ",
-                                    snapshot.data!.results![index+1].releaseDate ??
-                                        " ");
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else {
-                    return const apploader();
-                  }
-                }),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return const apploader();
+                }
+              },
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget detailsfilm(String path, String name, String rate, String date) {
+  Widget detailsFilm(String path, String name, String rate, String date, String overview) {
     return Container(
       width: 100,
-      height: 150,
-
+      height: 170,
       color: AppColors.gray,
       margin: const EdgeInsets.fromLTRB(7, 7, 5, 6),
       child: Stack(
@@ -189,15 +203,29 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
         children: [
           Column(
             children: [
-              Image(
-                image: NetworkImage(path),
-                width: 80,
-                height: 105,
-                fit: BoxFit.cover,
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, Detailfilmscreen.routeName,
+                      arguments: datafilm(
+                          titel: name,
+                          path: path,
+                          content: overview ?? " ",
+                          date: date,
+                          issave: false,
+                          rate: rate
+                      )
+                  );
+                },
+                child: Image.network(
+                  path,
+                  width: 100,
+                  height: 120,
+                  fit: BoxFit.cover,
+                ),
               ),
               Row(
                 children: [
-                  Image.asset("assets/star-2.png",height: 16,width: 16,),
+                  Image.asset("assets/star-2.png", height: 16, width: 16),
                   Text(
                     rate,
                     style: const TextStyle(color: Colors.white),
@@ -216,17 +244,22 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
               ),
             ],
           ),
-          InkWell(
-            onTap: (){
-              setState(() {
-                issave=true;
-
-              });
-            },
-            child: Container(
-                margin: const EdgeInsets.fromLTRB(3, 0, 0, 0),
-                child: Image.asset(issave?"assets/bookmarktrue.png":"assets/bookmark.png")),
-          )
+          Positioned(
+            top: 0,
+            left: 0,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  bookmarks[name] = !(bookmarks[name] ?? false);
+                });
+              },
+              child: Image.asset(
+                bookmarks[name] == true
+                    ? "assets/bookmarktrue.png"
+                    : "assets/bookmark.png",
+              ),
+            ),
+          ),
         ],
       ),
     );

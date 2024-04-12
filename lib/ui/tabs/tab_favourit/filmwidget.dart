@@ -50,11 +50,13 @@ class _FilmwidgetState extends State<Filmwidget> {
                   widget.film.data,
                   style: const TextStyle(color: Colors.white),
                 ),
-                Text(
-                  widget.film.overView,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: const TextStyle(color: Colors.white),
+                Expanded(
+                  child: Text(
+                    widget.film.overView,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),

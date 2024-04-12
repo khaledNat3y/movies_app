@@ -173,61 +173,50 @@ class _firesttabState extends State<firesttab> {
   }
 
   Widget filmWidget(dynamic film, String title) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          bookmarks[title] = !bookmarks[title]!;
-          Addfilm( "$baseUrl${film.backdropPath}", film.originalTitle??" ", film.overview, film.releaseDate ?? " ");
-
-        });
-
-      },
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(7, 7, 5, 6),
-        child: Stack(
-          alignment: AlignmentDirectional.topStart,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, Detailfilmscreen.routeName,
-                      arguments: datafilm(
-                          titel: film.title ?? " ",
-                          path: "$baseUrl${film.backdropPath}",
-                          content: film.overview ?? " ",
-                          date: film.releaseDate ?? " ",
-                          issave: false,
-                          rate: film.voteAverage.toString()
-                      )
-                  );
-                },
-                child: Image.network(
-                  "$baseUrl${film.backdropPath}",
-                  width: 120,
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
+    return Container(
+      margin: const EdgeInsets.fromLTRB(7, 7, 5, 6),
+      child: Stack(
+        alignment: AlignmentDirectional.topStart,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, Detailfilmscreen.routeName,
+                    arguments: datafilm(
+                        titel: film.title ?? " ",
+                        path: "$baseUrl${film.backdropPath}",
+                        content: film.overview ?? " ",
+                        date: film.releaseDate ?? " ",
+                        issave: false,
+                        rate: film.voteAverage.toString()
+                    )
+                );
+              },
+              child: Image.network(
+                "$baseUrl${film.backdropPath}",
+                width: 120,
+                height: 200,
+                fit: BoxFit.cover,
               ),
             ),
-            Positioned(
-              top: 0,
-              left: 0,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    bookmarks[title] = !bookmarks[title]!;
-
-
-                  });
-                },
-                child: Image.asset(
-                  bookmarks[title]! ? "assets/bookmarktrue.png" : "assets/bookmark.png",
-                ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  bookmarks[title] = !bookmarks[title]!;
+                  Addfilm( "$baseUrl${film.backdropPath}", film.originalTitle??" ", film.overview, film.releaseDate ?? " ");
+                });
+              },
+              child: Image.asset(
+                bookmarks[title]! ? "assets/bookmarktrue.png" : "assets/bookmark.png",
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

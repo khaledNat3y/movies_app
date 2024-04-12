@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/model/data-film.dart';
-import 'package:movies/model/model.dart';
+
+import '../model/model.dart';
 
 
 
@@ -22,13 +23,12 @@ class Listprovider extends ChangeNotifier {
     QuerySnapshot querySnapshot = await filmcollection.get();
     var documents = querySnapshot.docs;
     for (var doc in documents) {
-      Map jeson = doc.data() as Map;
-      Film todo = Film(
-
-          titel: jeson["titel"],
-          overView: jeson["overView"],
-          data: jeson["data"],
-          path: jeson["path"]);
+      Map json = doc.data() as Map;
+      Film film = Film(
+          titel: json["titel"],
+          overView: json["overView"],
+          data: json["data"],
+          path: json["path"]);
     }
     notifyListeners();
   }

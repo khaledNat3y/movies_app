@@ -58,7 +58,6 @@ abstract class ApiManager {
       rethrow;
     }
   }
-
   static Future<SearchResponse> search() async {
     try {
       Uri url = Uri.parse("https://api.themoviedb.org/3/search/movie?apikey=a8a1b517e6f2636023e25cbb55c8f4af&q=");

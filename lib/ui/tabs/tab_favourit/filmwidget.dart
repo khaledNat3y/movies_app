@@ -43,16 +43,16 @@ class _FilmwidgetState extends State<Filmwidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.film.titel,
+                  widget.film.title,
                   style: const TextStyle(color: Colors.white),
                 ),
                 Text(
-                  widget.film.data,
+                  widget.film.date,
                   style: const TextStyle(color: Colors.white),
                 ),
                 Expanded(
                   child: Text(
-                    widget.film.overView,
+                    widget.film.overview,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: const TextStyle(color: Colors.white),

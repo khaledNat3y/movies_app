@@ -19,7 +19,7 @@ class _FavoriteState extends State<Favorite> {
   void initState() {
     // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      provider.gettaskinfiarbase();
+      provider.getFilmsFromFirestore();
 
     });
 

@@ -296,21 +296,25 @@ class _firesttabState extends State<firesttab> {
   }
 
 
-  void Addfilm(String path,String title,String overviwe,String data) async {
+  void Addfilm(String path, String title, String overview, String date) async {
+    CollectionReference movieCollection = FirebaseFirestore.instance.collection('movies');
 
-      CollectionReference todocollection =
-      FirebaseFirestore.instance.collection("movies");
-      var docs = todocollection.doc();
-      docs.set({
-      "titel": title,
-      "overView":overviwe,
-      "data":data,
-      "path":"$baseUrl$path"
-      }).timeout(const Duration(milliseconds: 300), onTimeout: () {
-        provider.gettaskinfiarbase();
-        Navigator.pop(context);
+    try {
+      await movieCollection.add({
+        'title': title,
+        'overview': overview,
+        'date': date,
+        'path': path,
       });
+      provider.getFilmsFromFirestore();
+      Navigator.pop(context);
+    } catch (e) {
+      print('Error adding film: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to add film, please try again.')),
+      );
     }
+  }
 
 
 

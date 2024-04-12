@@ -1,12 +1,12 @@
 class Film{
 
-  String titel;
-  String overView;
-  String data;
+  String title;
+  String overview;
+  String date;
   String path;
   Film({
     required this.path,
-    required this.titel,
-    required this.overView,
-    required this.data,});
+    required this.title,
+    required this.overview,
+    required this.date,});
 }

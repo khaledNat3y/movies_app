@@ -17,9 +17,13 @@ class _MoviesState extends State<Movies> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          "Browse Category",
-          style: TextStyle(color: Colors.white),textAlign: TextAlign.left,
+        Container(
+          margin:const EdgeInsets.all(10) ,
+          padding: const EdgeInsets.all(10),
+          child: const Text(
+            "Browse Category",
+            style: TextStyle(color: Colors.white,fontSize: 25),textAlign: TextAlign.left,
+          ),
         ),
         Expanded(
           child: FutureBuilder(

@@ -105,11 +105,27 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                     ),
                   ),
                    Expanded(
-                     child: Text(
-                      "${data.content}\n${data.rate}"
-                      ,style: TextStyle(color: Colors.white),
+                     child: Column(
+                       children: [
+                         Text(
+                          "${data.content}\n"
+                          ,style: TextStyle(color: Colors.white),
                   ),
-                   )
+                         Row(
+
+                           children: [
+                             Image.asset("assets/star-2.png",height: 16,width: 16,),
+                             Text(
+                               data.rate,
+                               style: const TextStyle(color: Colors.white),
+                             ),
+                           ],
+                         ),
+                       ],
+                     ),
+
+                   ),
+
                 ],
               ),
             ),
@@ -163,6 +179,8 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
 
   Widget detailsfilm(String path, String name, String rate, String date) {
     return Container(
+      width: 100,
+      height: 150,
 
       color: AppColors.gray,
       margin: const EdgeInsets.fromLTRB(7, 7, 5, 6),
@@ -174,16 +192,23 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
               Image(
                 image: NetworkImage(path),
                 width: 80,
-                height: 120,
+                height: 105,
                 fit: BoxFit.cover,
               ),
-              Text(
-                "$rate",
-                style: const TextStyle(color: Colors.white),
+              Row(
+                children: [
+                  Image.asset("assets/star-2.png",height: 16,width: 16,),
+                  Text(
+                    rate,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ],
               ),
-              Text(
-                name,
-                style: const TextStyle(color: Colors.white),
+              Expanded(
+                child: Text(
+                  name,
+                  style: const TextStyle(color: Colors.white),
+                ),
               ),
               Text(
                 date,

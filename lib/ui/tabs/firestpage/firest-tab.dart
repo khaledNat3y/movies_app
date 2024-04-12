@@ -142,11 +142,14 @@ class _firesttabState extends State<firesttab> {
                     itemCount: snapshot.data!.results!.length,
                     itemBuilder: (context, index) {
                       var film = snapshot.data!.results![index+1];
+
                       if (!bookmarks.containsKey(film.title)) {
                         bookmarks[film.title] = false;
+
                       }
                       if (title == "Recommended") {
                         return detailsFilm(
+
                             "$baseUrl${film.backdropPath}",
                             film.originalTitle ?? " ",
                             film.voteAverage.toString(),
@@ -198,7 +201,6 @@ class _firesttabState extends State<firesttab> {
                 onTap: () {
                   setState(() {
                     bookmarks[title] = !bookmarks[title]!;
-                    addfilm("$baseUrl${film.backdropPath}", film.releaseDate, film.title, film.overview);
                   });
                 },
                 child: Image.asset(
@@ -213,73 +215,63 @@ class _firesttabState extends State<firesttab> {
   }
 
   Widget detailsFilm(String path, String name, String rate, String date,String overView) {
-    return GestureDetector(
-      onTap: () {
+    return Container(
+      width: 100,
+      height: 150,
+      color: AppColors.gray,
+      margin: const EdgeInsets.fromLTRB(7, 7, 5, 6),
+      child: Stack(
+        alignment: AlignmentDirectional.topStart,
+        children: [
+          Column(
+            children: [
+              Image.network(
+                path,
+                width: 80,
+                height: 105,
+                fit: BoxFit.cover,
+              ),
+              Row(
+                children: [
+                  Image.asset("assets/star-2.png",height: 16,width: 16,),
+                  Text(
+                    rate,
+                    style: const TextStyle(color: Colors.white),
+                  ),
 
-      },
-      child: Container(
-        color: AppColors.gray,
-        margin: const EdgeInsets.fromLTRB(7, 7, 5, 6),
-        child: Stack(
-          alignment: AlignmentDirectional.topStart,
-          children: [
-            Column(
-              children: [
-                Image.network(
-                  path,
-                  width: 80,
-                  height: 120,
-                  fit: BoxFit.cover,
-                ),
-                Text(
-                  rate,
-                  style: const TextStyle(color: Colors.white),
-                ),
-                Text(
+                ],
+              ),
+              Expanded(
+                child: Text(
                   name,
                   style: const TextStyle(color: Colors.white),
                 ),
-                Text(
-                  date,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-            // Bookmark icon
-            Positioned(
-              top: 0,
-              left: 0,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    bookmarks[name] = !bookmarks[name]!;
-                    addfilm(path, date, name, overView);
-                  });
-                },
-                child: Image.asset(
-                    bookmarks[name]! ? "assets/bookmarktrue.png" : "assets/bookmark.png"
-                ),
+              ),
+              Text(
+                date,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+          // Bookmark icon
+          Positioned(
+            top: 0,
+            left: 0,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  bookmarks[name] = !bookmarks[name]!;
+                });
+              },
+              child: Image.asset(
+                  bookmarks[name]! ? "assets/bookmarktrue.png" : "assets/bookmark.png"
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  void addfilm(String path,String data,String name,String overView) {
-    CollectionReference Filmcollection=FirebaseFirestore.instance.collection(datafilm.collectionname);
-    var docs=Filmcollection.doc();
-    docs.set({
-      "path":path,
-      "data":data,
-      "name":name,
-      "overView":overView
-    }).timeout(const Duration(milliseconds: 300), onTimeout: () {
-      provider.gettaskinfiarbase();
-      Navigator.pop(context);
-    });
-    print("film is added++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-  }
 }
 

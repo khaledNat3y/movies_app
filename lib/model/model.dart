@@ -1,12 +1,15 @@
-class Film{
+class Film {
+  final String title;
+  final String overview;
+  final String date;
+  final String path;
+  final String? documentId; // Add the document ID field
 
-  String title;
-  String overview;
-  String date;
-  String path;
   Film({
-    required this.path,
     required this.title,
     required this.overview,
-    required this.date,});
+    required this.date,
+    required this.path,
+    this.documentId, // Initialize the document ID field
+  });
 }

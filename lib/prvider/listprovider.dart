@@ -6,7 +6,7 @@ import '../model/model.dart';
 class Listprovider extends ChangeNotifier {
   List<Film> films = [];
 
-
+  // Function to fetch films from Firestore and update the `films` list
   void getFilmsFromFirestore() async {
     try {
       films.clear(); // Clear the current list of films
@@ -37,6 +37,20 @@ class Listprovider extends ChangeNotifier {
       // Handle any errors that may occur during fetching
       print('Error fetching films from Firestore: $e');
       // Consider providing appropriate feedback to the user (e.g., using a SnackBar)
+    }
+  }
+
+  Future<void> deleteFilm(String documentId) async {
+    try {
+      CollectionReference filmCollection = FirebaseFirestore.instance.collection('movies');
+
+      await filmCollection.doc(documentId).delete();
+
+      films.removeWhere((film) => film.documentId == documentId);
+
+      notifyListeners();
+    } catch (e) {
+      print('Error deleting film from Firestore: $e');
     }
   }
 }

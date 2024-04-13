@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:movies/model/data-film.dart';
-
-import '../../../data/api_manger.dart';
-import '../../../utils/app-color.dart';
+import 'package:movies/data/api_manger.dart';
+import 'package:movies/utils/app-color.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../commenwidget/apploader.dart';
 import '../../commenwidget/errorviwe.dart';
 
@@ -16,9 +16,26 @@ class Detailfilmscreen extends StatefulWidget {
 }
 
 class _DetailfilmscreenState extends State<Detailfilmscreen> {
-  String baseUrl = "https://image.tmdb.org/t/p/w500/";
-  bool issave = false;
-  final Map<String, bool> bookmarks = {};
+  final String baseUrl = "https://image.tmdb.org/t/p/w500/";
+  final Map<String, bool> bookmarks = {}; // Map to track bookmark state for each film
+
+  @override
+  void initState() {
+    super.initState();
+    loadBookmarks(); // Load bookmarks from shared preferences
+  }
+
+  // Load bookmarks from shared preferences
+  void loadBookmarks() async {
+    final prefs = await SharedPreferences.getInstance();
+    final bookmarkKeys = prefs.getKeys();
+    setState(() {
+      bookmarks.clear();
+      for (String key in bookmarkKeys) {
+        bookmarks[key] = prefs.getBool(key) ?? false;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,47 +63,49 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
         child: Column(
           children: [
             Container(
-                margin: const EdgeInsets.all(8),
-                padding: const EdgeInsets.all(8),
-                width: double.infinity,
-                child: Stack(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Image.network(
-                          data.path,
-                          height: 217,
-                        ),
-                        Text(
-                          data.titel,
-                          style: const TextStyle(color: Colors.white),
-                          textAlign: TextAlign.left,
-                        ),
-                        Text(
-                          data.date,
-                          style: const TextStyle(color: Colors.white),
-                          textAlign: TextAlign.left,
-                        ),
-                      ],
-                    ),
-                    const Positioned.fill(
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: InkWell(
-                          child: Icon(
-                            Icons.play_circle,
-                            size: 60,
-                            color: Colors.white,
-                          ),
+              margin: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
+              width: double.infinity,
+              child: Stack(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Image.network(
+                        data.path,
+                        height: 217,
+                      ),
+                      Text(
+                        data.titel,
+                        style: const TextStyle(color: Colors.white),
+                        textAlign: TextAlign.left,
+                      ),
+                      Text(
+                        data.date,
+                        style: const TextStyle(color: Colors.white),
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  ),
+                  const Positioned.fill(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: InkWell(
+                        child: Icon(
+                          Icons.play_circle,
+                          size: 60,
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                  ],
-                )),
+                  ),
+                ],
+              ),
+            ),
             Container(
+              margin: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
                     margin: const EdgeInsets.fromLTRB(7, 7, 5, 6),
@@ -110,8 +129,15 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                         Positioned(
                           top: 0,
                           left: 0,
-                          child: Image.asset(
-                            "assets/bookmark.png",
+                          child: GestureDetector(
+                            onTap: () {
+                              toggleBookmark(data.titel, data.path, data.content, data.date);
+                            },
+                            child: Image.asset(
+                              bookmarks[data.titel] ?? false
+                                  ? "assets/bookmarktrue.png"
+                                  : "assets/bookmark.png",
+                            ),
                           ),
                         ),
                       ],
@@ -162,18 +188,13 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                             scrollDirection: Axis.horizontal,
                             itemCount: snapshot.data?.results?.length ?? 0,
                             itemBuilder: (context, index) {
-                              if (index + 1 >= snapshot.data!.results!.length) {
-                                return Container();
-                              }
-
-                              final result = snapshot.data!.results![index + 1];
-
+                              final result = snapshot.data!.results![index];
                               return detailsFilm(
-                                "$baseUrl${result.backdropPath ?? ''}",
+                                "$baseUrl${result.backdropPath}",
                                 result.originalTitle ?? " ",
-                                result.voteAverage?.toString() ?? " ",
+                                result.voteAverage.toString(),
                                 result.releaseDate ?? " ",
-                                result.overview ?? " ",
+                                result.overview??" ",
                               );
                             },
                           ),
@@ -207,14 +228,13 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                 onTap: () {
                   Navigator.pushNamed(context, Detailfilmscreen.routeName,
                       arguments: datafilm(
-                          titel: name,
-                          path: path,
-                          content: overview ?? " ",
-                          date: date,
-                          issave: false,
-                          rate: rate
-                      )
-                  );
+                        titel: name,
+                        path: path,
+                        content: overview,
+                        date: date,
+                        issave: false,
+                        rate: rate,
+                      ));
                 },
                 child: Image.network(
                   path,
@@ -244,17 +264,16 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
               ),
             ],
           ),
+          // Bookmark icon at the top left corner
           Positioned(
             top: 0,
             left: 0,
             child: GestureDetector(
               onTap: () {
-                setState(() {
-                  bookmarks[name] = !(bookmarks[name] ?? false);
-                });
+                toggleBookmark(name, path, overview, date);
               },
               child: Image.asset(
-                bookmarks[name] == true
+                bookmarks[name] ?? false
                     ? "assets/bookmarktrue.png"
                     : "assets/bookmark.png",
               ),
@@ -263,5 +282,17 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
         ],
       ),
     );
+  }
+
+  // Toggle bookmark state and save in shared preferences
+  void toggleBookmark(String filmTitle, String path, String overview, String date) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      bookmarks[filmTitle] = !(bookmarks[filmTitle] ?? false);
+    });
+
+    // Save the new state in shared preferences
+    await prefs.setBool(filmTitle, bookmarks[filmTitle]!);
   }
 }

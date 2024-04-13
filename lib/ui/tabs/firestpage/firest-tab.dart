@@ -7,6 +7,7 @@ import 'package:movies/prvider/listprovider.dart';
 import 'package:movies/ui/commenwidget/errorviwe.dart';
 import 'package:movies/utils/app-color.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../commenwidget/apploader.dart';
 import 'detailfilmscreen.dart';
 
@@ -24,8 +25,26 @@ class _firesttabState extends State<firesttab> {
   final Map<String, bool> bookmarks = {}; // Map to track bookmark state for each film
 
   @override
+  void initState() {
+    super.initState();
+    loadBookmarks(); // Load bookmarks from shared preferences
+  }
+
+  void loadBookmarks() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Load all saved bookmarks
+    final bookmarkKeys = prefs.getKeys();
+    setState(() {
+      bookmarks.clear();
+      for (String key in bookmarkKeys) {
+        bookmarks[key] = prefs.getBool(key) ?? false;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    provider=Provider.of(context);
+    provider = Provider.of(context);
     int index = random.nextInt(11);
     return SingleChildScrollView(
       child: Column(
@@ -37,8 +56,8 @@ class _firesttabState extends State<firesttab> {
                 if (snapshot.hasError) {
                   return errorviwe(error: 'Something went wrong');
                 } else if (snapshot.hasData) {
-                  // Initialize bookmarks map
                   var film = snapshot.data!.results![index];
+                  // Initialize bookmarks map if not already present
                   if (!bookmarks.containsKey(film.title)) {
                     bookmarks[film.title!] = false;
                   }
@@ -47,12 +66,12 @@ class _firesttabState extends State<firesttab> {
                     onTap: () {
                       Navigator.pushNamed(context, Detailfilmscreen.routeName,
                           arguments: datafilm(
-                              titel: film.title ?? " ",
-                              path: "$baseUrl${film.backdropPath}",
-                              content: film.overview ?? " ",
-                              date: film.releaseDate ?? " ",
-                              issave: false,
-                            rate: film.voteAverage.toString()
+                            titel: film.title ?? " ",
+                            path: "$baseUrl${film.backdropPath}",
+                            content: film.overview ?? " ",
+                            date: film.releaseDate ?? " ",
+                            issave: false,
+                            rate: film.voteAverage.toString(),
                           )
                       );
                     },
@@ -115,7 +134,6 @@ class _firesttabState extends State<firesttab> {
   }
 
   Widget buildFilmList(Future<dynamic> future, String title) {
-
     return FutureBuilder(
       future: future,
       builder: (context, snapshot) {
@@ -141,21 +159,20 @@ class _firesttabState extends State<firesttab> {
                     scrollDirection: Axis.horizontal,
                     itemCount: snapshot.data!.results!.length,
                     itemBuilder: (context, index) {
-                      var film = snapshot.data!.results![index+1];
+                      var film = snapshot.data!.results![index];
 
+                      // Initialize bookmark state for the film
                       if (!bookmarks.containsKey(film.title)) {
                         bookmarks[film.title] = false;
-
                       }
+
                       if (title == "Recommended") {
                         return detailsFilm(
-
                             "$baseUrl${film.backdropPath}",
                             film.originalTitle ?? " ",
                             film.voteAverage.toString(),
                             film.releaseDate ?? " ",
-                          film.overview
-                        );
+                            film.overview ?? " ");
                       } else if (title == "New Releases") {
                         return filmWidget(film, film.title ?? " ");
                       }
@@ -201,15 +218,13 @@ class _firesttabState extends State<firesttab> {
               ),
             ),
           ),
+          // Bookmark icon at the top left corner
           Positioned(
             top: 0,
             left: 0,
             child: GestureDetector(
               onTap: () {
-                setState(() {
-                  bookmarks[title] = !bookmarks[title]!;
-                  Addfilm( "$baseUrl${film.backdropPath}", film.originalTitle??" ", film.overview, film.releaseDate ?? " ");
-                });
+                handleBookmarkToggle(film.title ?? " ", "$baseUrl${film.backdropPath}", film.overview ?? " ", film.releaseDate ?? " ");
               },
               child: Image.asset(
                 bookmarks[title]! ? "assets/bookmarktrue.png" : "assets/bookmark.png",
@@ -221,7 +236,7 @@ class _firesttabState extends State<firesttab> {
     );
   }
 
-  Widget detailsFilm(String path, String name, String rate, String date,String overView) {
+  Widget detailsFilm(String path, String name, String rate, String date, String overView) {
     return Container(
       width: 100,
       height: 170,
@@ -233,7 +248,7 @@ class _firesttabState extends State<firesttab> {
           Column(
             children: [
               InkWell(
-                onTap: (){
+                onTap: () {
                   Navigator.pushNamed(context, Detailfilmscreen.routeName,
                       arguments: datafilm(
                           titel: name,
@@ -254,12 +269,11 @@ class _firesttabState extends State<firesttab> {
               ),
               Row(
                 children: [
-                  Image.asset("assets/star-2.png",height: 16,width: 16,),
+                  Image.asset("assets/star-2.png", height: 16, width: 16),
                   Text(
                     rate,
                     style: const TextStyle(color: Colors.white),
                   ),
-
                 ],
               ),
               Expanded(
@@ -280,13 +294,10 @@ class _firesttabState extends State<firesttab> {
             left: 0,
             child: GestureDetector(
               onTap: () {
-                setState(() {
-                  bookmarks[name] = !bookmarks[name]!;
-                  Addfilm(path, name, overView, date);
-                });
+                handleBookmarkToggle(name, path, overView, date);
               },
               child: Image.asset(
-                  bookmarks[name]! ? "assets/bookmarktrue.png" : "assets/bookmark.png"
+                bookmarks[name]! ? "assets/bookmarktrue.png" : "assets/bookmark.png",
               ),
             ),
           ),
@@ -295,6 +306,22 @@ class _firesttabState extends State<firesttab> {
     );
   }
 
+  void handleBookmarkToggle(String filmTitle, String path, String overview, String date) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Toggle bookmark state
+    setState(() {
+      bookmarks[filmTitle] = !bookmarks[filmTitle]!;
+    });
+
+    // Save the new state in shared preferences
+    await prefs.setBool(filmTitle, bookmarks[filmTitle]!);
+
+    if (bookmarks[filmTitle]!) {
+      // If bookmarked, add the film to Firestore
+      Addfilm(path, filmTitle, overview, date);
+    }
+  }
 
   void Addfilm(String path, String title, String overview, String date) async {
     CollectionReference movieCollection = FirebaseFirestore.instance.collection('movies');
@@ -307,7 +334,6 @@ class _firesttabState extends State<firesttab> {
         'path': path,
       });
       provider.getFilmsFromFirestore();
-      Navigator.pop(context);
     } catch (e) {
       print('Error adding film: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -315,8 +341,4 @@ class _firesttabState extends State<firesttab> {
       );
     }
   }
-
-
-
 }
-

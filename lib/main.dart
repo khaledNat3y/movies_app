@@ -1,7 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:movies/prvider/listprovider.dart';
+import 'package:movies/provider/listprovider.dart';
 import 'package:movies/ui/home.dart';
+import 'package:movies/ui/splashscreen/spalshscreen.dart';
 import 'package:movies/ui/tabs/firestpage/detailfilmscreen.dart';
 import 'package:movies/ui/tabs/tab_moves/Moviecaroctroy.dart';
 import 'package:provider/provider.dart';
@@ -24,11 +25,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
+        SplashView.routeName:(_)=>SplashView(),
         Homescreen.routeName: (_) => const Homescreen(),
         Detailfilmscreen.routeName: (_) => const Detailfilmscreen(),
         Moviecatogery.routeName: (_) => const Moviecatogery(),
       },
-      initialRoute: Homescreen.routeName,
+      initialRoute: SplashView.routeName,
     );
   }
 }

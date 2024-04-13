@@ -17,9 +17,9 @@ class Listprovider extends ChangeNotifier {
         Map<String, dynamic> jsonData = doc.data() as Map<String, dynamic>;
 
         // Ensure values are non-null and handle possible `null` values with default values
-        String title = jsonData['titel'] as String? ?? ''; // Provide a default empty string if `titel` is null
-        String overview = jsonData['overView'] as String? ?? ''; // Default empty string if `overView` is null
-        String date = jsonData['data'] as String? ?? ''; // Default empty string if `data` is null
+        String title = jsonData['title'] as String? ?? ''; // Provide a default empty string if `titel` is null
+        String overview = jsonData['overview'] as String? ?? ''; // Default empty string if `overView` is null
+        String date = jsonData['date'] as String? ?? ''; // Default empty string if `data` is null
         String path = jsonData['path'] as String? ?? ''; // Default empty string if `path` is null
 
         // Create a new Film object and add it to the list of films

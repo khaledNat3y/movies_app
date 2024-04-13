@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/model/data-film.dart';
 import 'package:movies/data/api_manger.dart';
@@ -288,11 +289,45 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
   void toggleBookmark(String filmTitle, String path, String overview, String date) async {
     final prefs = await SharedPreferences.getInstance();
 
-    setState(() {
-      bookmarks[filmTitle] = !(bookmarks[filmTitle] ?? false);
-    });
+    // Toggle bookmark state
+    setState(() => bookmarks[filmTitle] = !bookmarks[filmTitle]!);
 
     // Save the new state in shared preferences
     await prefs.setBool(filmTitle, bookmarks[filmTitle]!);
+
+    // Get the reference to the Firestore collection
+    CollectionReference movieCollection = FirebaseFirestore.instance.collection('movies');
+
+    if (bookmarks[filmTitle]!) {
+      // If bookmarked (now true), add the film to Firestore
+      try {
+        await movieCollection.doc(filmTitle).set({
+          'title': filmTitle,
+          'overview': overview,
+          'date': date,
+          'path': path,
+        });
+        // Optional: You might want to refresh provider data
+        // provider.getFilmsFromFirestore();
+      } catch (e) {
+        print('Error adding film: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to add film, please try again.')),
+        );
+      }
+    } else {
+      // If bookmark is toggled off (now false), remove the film from Firestore
+      try {
+        // Delete the film document from Firestore using its title as the document ID
+        await movieCollection.doc(filmTitle).delete();
+        // Optional: You might want to refresh provider data
+        // provider.getFilmsFromFirestore();
+      } catch (e) {
+        print('Error removing film: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to remove film, please try again.')),
+        );
+      }
+    }
   }
 }

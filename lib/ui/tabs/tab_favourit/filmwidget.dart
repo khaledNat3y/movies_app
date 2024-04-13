@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:movies/model/model.dart';
-
 import '../../../utils/app-color.dart';
 
 class Filmwidget extends StatefulWidget {
   final Film film;
+
+  // Constructor takes a Film object as a required parameter
   const Filmwidget({super.key, required this.film});
 
   @override
@@ -14,7 +15,7 @@ class Filmwidget extends StatefulWidget {
 class _FilmwidgetState extends State<Filmwidget> {
   @override
   Widget build(BuildContext context) {
-    return  Container(
+    return Container(
       decoration: const BoxDecoration(
         color: AppColors.transparent,
         border: Border(
@@ -26,30 +27,35 @@ class _FilmwidgetState extends State<Filmwidget> {
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 7),
       child: Row(
         children: [
+          // Film image on the left side
           ClipRRect(
             borderRadius: BorderRadius.circular(5),
-            child: Image(
-              image: NetworkImage(widget.film.path),
+            child: Image.network(
+              widget.film.path, // URL of the film's image
               width: 140,
-              height: MediaQuery.of(context).size.height * 0.13,
+              height: MediaQuery.of(context).size.height * 0.13, // Relative height
               fit: BoxFit.cover,
             ),
           ),
           const SizedBox(
-            width: 5,
+            width: 5, // Space between the image and text
           ),
+          // Film information on the right side
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Film title
                 Text(
                   widget.film.title,
                   style: const TextStyle(color: Colors.white),
                 ),
+                // Film date
                 Text(
                   widget.film.date,
                   style: const TextStyle(color: Colors.white),
                 ),
+                // Film overview, truncated to one line
                 Expanded(
                   child: Text(
                     widget.film.overview,
@@ -60,7 +66,7 @@ class _FilmwidgetState extends State<Filmwidget> {
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

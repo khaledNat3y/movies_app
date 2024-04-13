@@ -1,12 +1,13 @@
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/data/api_manger.dart';
 import 'package:movies/model/data-film.dart';
-import 'package:movies/prvider/listprovider.dart';
 import 'package:movies/ui/commenwidget/errorviwe.dart';
 import 'package:movies/utils/app-color.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../provider/listprovider.dart';
 import '../../commenwidget/apploader.dart';
 import 'detailfilmscreen.dart';
 
@@ -20,6 +21,7 @@ class firesttab extends StatefulWidget {
 class _firesttabState extends State<firesttab> {
   late Listprovider provider;
   final String baseUrl = "https://image.tmdb.org/t/p/w500/";
+  final Random random = Random();
   final Map<String, bool> bookmarks = {}; // Map to track bookmark state for each film
 
   @override
@@ -42,12 +44,86 @@ class _firesttabState extends State<firesttab> {
 
   @override
   Widget build(BuildContext context) {
-    provider = Provider.of<Listprovider>(context, listen: false);
+    provider = Provider.of(context);
+    int index = random.nextInt(11);
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          buildFeaturedFilm(),
+          FutureBuilder(
+              future: ApiManager.popularFilm(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const errorviwe(error: 'Something went wrong');
+                } else if (snapshot.hasData) {
+                  var film = snapshot.data!.results![index];
+                  // Initialize bookmarks map if not already present
+                  if (!bookmarks.containsKey(film.title)) {
+                    bookmarks[film.title!] = false;
+                  }
+
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, Detailfilmscreen.routeName,
+                          arguments: datafilm(
+                            titel: film.title ?? " ",
+                            path: "$baseUrl${film.backdropPath}",
+                            content: film.overview ?? " ",
+                            date: film.releaseDate ?? " ",
+                            issave: false,
+                            rate: film.voteAverage.toString(),
+                          )
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
+                      width: double.infinity,
+                      child: Stack(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Image.network(
+                                "$baseUrl${film.backdropPath}",
+                                height: 217,
+                                fit: BoxFit.cover,
+                              ),
+                              Text(
+                                film.originalTitle ?? " ",
+                                style: const TextStyle(color: Colors.white),
+                                textAlign: TextAlign.end,
+                              ),
+                              Text(
+                                film.releaseDate ?? " ",
+                                style: const TextStyle(color: Colors.white),
+                                textAlign: TextAlign.end,
+                              ),
+                            ],
+                          ),
+                          const Positioned.fill(
+                            child: Align(
+                                alignment: Alignment.center,
+                                child: Icon(
+                                  Icons.play_circle,
+                                  size: 60,
+                                  color: Colors.white,
+                                )),
+                          ),
+                          // Film widget at the bottom left corner
+                          Positioned(
+                            bottom: 0,
+                            left: 0,
+                            child: filmWidget(film, film.title ?? " "),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                } else {
+                  return const apploader();
+                }
+              }),
           const SizedBox(height: 5),
           buildFilmList(ApiManager.newRelease(), "New Releases"),
           const SizedBox(height: 25),
@@ -57,89 +133,12 @@ class _firesttabState extends State<firesttab> {
     );
   }
 
-  Widget buildFeaturedFilm() {
-    return FutureBuilder(
-      future: ApiManager.popularFilm(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return errorviwe(error: 'Something went wrong');
-        } else if (snapshot.hasData) {
-          var film = snapshot.data!.results!.first;
-          // Initialize bookmarks map if not already present
-          if (!bookmarks.containsKey(film.title)) {
-            bookmarks[film.title!] = false;
-          }
-
-          return GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, Detailfilmscreen.routeName,
-                  arguments: datafilm(
-                    titel: film.title ?? " ",
-                    path: "$baseUrl${film.backdropPath}",
-                    content: film.overview ?? " ",
-                    date: film.releaseDate ?? " ",
-                    issave: false,
-                    rate: film.voteAverage.toString(),
-                  )
-              );
-            },
-            child: Container(
-              margin: const EdgeInsets.all(8),
-              padding: const EdgeInsets.all(8),
-              width: double.infinity,
-              child: Stack(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Image.network(
-                        "$baseUrl${film.backdropPath}",
-                        height: 217,
-                        fit: BoxFit.cover,
-                      ),
-                      Text(
-                        film.originalTitle ?? " ",
-                        style: const TextStyle(color: Colors.white),
-                        textAlign: TextAlign.end,
-                      ),
-                      Text(
-                        film.releaseDate ?? " ",
-                        style: const TextStyle(color: Colors.white),
-                        textAlign: TextAlign.end,
-                      ),
-                    ],
-                  ),
-                  const Positioned.fill(
-                    child: Align(
-                        alignment: Alignment.center,
-                        child: Icon(
-                          Icons.play_circle,
-                          size: 60,
-                          color: Colors.white,
-                        )),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    child: filmWidget(film, film.title ?? " "),
-                  ),
-                ],
-              ),
-            ),
-          );
-        } else {
-          return const apploader();
-        }
-      },
-    );
-  }
-
   Widget buildFilmList(Future<dynamic> future, String title) {
     return FutureBuilder(
       future: future,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return errorviwe(error: 'Something went wrong');
+          return const errorviwe(error: 'Something went wrong');
         } else if (snapshot.hasData) {
           return Container(
             height: 200,
@@ -174,7 +173,8 @@ class _firesttabState extends State<firesttab> {
                             film.voteAverage.toString(),
                             film.releaseDate ?? " ",
                             film.overview ?? " ");
-                      } else if (title == "New Releases") {
+                      }
+                      else if (title == "New Releases") {
                         return filmWidget(film, film.title ?? " ");
                       }
                     },
@@ -238,6 +238,16 @@ class _firesttabState extends State<firesttab> {
   }
 
   Widget detailsFilm(String path, String name, String rate, String date, String overView) {
+    // Ensure that none of the arguments are null; if they are, use a default value.
+    path ??= '';
+    name ??= 'Unknown';
+    rate ??= '0';
+    date ??= 'Unknown';
+    overView ??= '';
+
+    // Determine whether the bookmark exists and set a default if the key is not present in the map.
+    final isBookmarked = bookmarks[name] ?? false;
+
     return Container(
       width: 100,
       height: 170,
@@ -250,15 +260,17 @@ class _firesttabState extends State<firesttab> {
             children: [
               InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, Detailfilmscreen.routeName,
-                      arguments: datafilm(
-                          titel: name,
-                          path: path,
-                          content: overView ?? " ",
-                          date: date,
-                          issave: false,
-                          rate: rate
-                      )
+                  Navigator.pushNamed(
+                    context,
+                    Detailfilmscreen.routeName,
+                    arguments: datafilm(
+                      titel: name,
+                      path: path,
+                      content: overView,
+                      date: date,
+                      issave: false,
+                      rate: rate,
+                    ),
                   );
                 },
                 child: Image.network(
@@ -298,7 +310,7 @@ class _firesttabState extends State<firesttab> {
                 handleBookmarkToggle(name, path, overView, date);
               },
               child: Image.asset(
-                bookmarks[name]! ? "assets/bookmarktrue.png" : "assets/bookmark.png",
+                isBookmarked ? "assets/bookmarktrue.png" : "assets/bookmark.png",
               ),
             ),
           ),
@@ -309,33 +321,72 @@ class _firesttabState extends State<firesttab> {
 
   void handleBookmarkToggle(String filmTitle, String path, String overview, String date) async {
     final prefs = await SharedPreferences.getInstance();
-    final CollectionReference filmCollection = FirebaseFirestore.instance.collection('bookmarked_films');
 
     // Toggle bookmark state
-    setState(() {
-      bookmarks[filmTitle] = !bookmarks[filmTitle]!;
-    });
+    setState(() => bookmarks[filmTitle] = !bookmarks[filmTitle]!);
 
     // Save the new state in shared preferences
     await prefs.setBool(filmTitle, bookmarks[filmTitle]!);
 
-    if (bookmarks[filmTitle]!) {
-      // Add film to Firestore
-      filmCollection.add({
-        'title': filmTitle,
-        'path': path,
-        'overview': overview,
-        'date': date,
-      });
-    } else {
-      // Delete film from Firestore
-      QuerySnapshot querySnapshot = await filmCollection
-          .where('title', isEqualTo: filmTitle)
-          .get();
+    // Get the reference to the Firestore collection
+    CollectionReference movieCollection = FirebaseFirestore.instance.collection('movies');
 
-      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
-        doc.reference.delete();
+    if (bookmarks[filmTitle]!) {
+      // If bookmarked (now true), add the film to Firestore
+      try {
+        await movieCollection.doc().set({
+          'title': filmTitle,
+          'overview': overview,
+          'date': date,
+          'path': path,
+        });
+        provider.getFilmsFromFirestore(); // Refresh provider data
+      } catch (e) {
+        print('Error adding film: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to add film, please try again.')),
+        );
+      }
+    } else {
+      // If bookmark is toggled off (now false), remove the film from Firestore
+      try {
+        // Query the Firestore collection to find the document with the specified title
+        QuerySnapshot querySnapshot = await movieCollection
+            .where('title', isEqualTo: filmTitle)
+            .get();
+
+        // If the query found any matching documents, delete them
+        if (querySnapshot.docs.isNotEmpty) {
+          for (var doc in querySnapshot.docs) {
+            await doc.reference.delete();
+          }
+          provider.getFilmsFromFirestore(); // Refresh provider data
+        }
+      } catch (e) {
+        print('Error removing film: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to remove film, please try again.')),
+        );
       }
     }
+  }
+  void Addfilm(String path, String title, String overview, String date) async {
+    CollectionReference movieCollection = FirebaseFirestore.instance.collection('movies');
+
+    try {
+      await movieCollection.doc().set({
+        'title': title,
+        'overview': overview,
+        'date': date,
+        'path': path,
+      });
+      provider.getFilmsFromFirestore();
+    } catch (e) {
+      print('Error adding film: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to add film, please try again.')),
+      );
+    }
+
   }
 }

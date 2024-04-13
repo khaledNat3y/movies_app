@@ -42,7 +42,7 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
     final datafilm? data = ModalRoute.of(context)?.settings.arguments as datafilm?;
 
     if (data == null) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(
           child: Text('No data found', style: TextStyle(color: Colors.white)),
         ),

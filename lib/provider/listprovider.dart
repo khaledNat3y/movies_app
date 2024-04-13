@@ -42,6 +42,7 @@ class Listprovider extends ChangeNotifier {
 
   Future<void> deleteFilm(String documentId) async {
     try {
+      films.clear();
       CollectionReference filmCollection = FirebaseFirestore.instance.collection('movies');
 
       await filmCollection.doc(documentId).delete();

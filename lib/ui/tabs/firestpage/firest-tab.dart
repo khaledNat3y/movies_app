@@ -1,4 +1,6 @@
+
 import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:movies/data/api_manger.dart';
@@ -141,7 +143,7 @@ class _firesttabState extends State<firesttab> {
           return const errorviwe(error: 'Something went wrong');
         } else if (snapshot.hasData) {
           return Container(
-            height: 200,
+            height: 210,
             color: AppColors.containerColor,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

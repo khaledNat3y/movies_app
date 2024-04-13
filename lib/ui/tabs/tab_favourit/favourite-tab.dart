@@ -1,7 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../provider/listprovider.dart';
-import 'filmwidget.dart';
+import '../../../utils/app-color.dart';
 
 class Favorite extends StatefulWidget {
   const Favorite({super.key});
@@ -28,11 +29,21 @@ class _FavoriteState extends State<Favorite> {
     provider = Provider.of<Listprovider>(context);
 
     if (provider.films.isEmpty) {
-      return const Center(
-        child: Text(
-          'No films in your watchlist.',
-          style: TextStyle(color: Colors.white),
-        ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            child: Text("Watchlist",style: TextStyle(color: AppColors.white,fontSize: 35),),
+          ),
+          Expanded(
+            child: Center(
+              child: Text(
+                'No films in your watchlist.',
+                style: TextStyle(color: Colors.white,),textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ],
       );
     }
 

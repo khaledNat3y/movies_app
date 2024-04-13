@@ -54,6 +54,9 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
     return Scaffold(
       backgroundColor: AppColors.black,
       appBar: AppBar(
+        iconTheme: IconThemeData(
+            color: AppColors.white
+        ),
         backgroundColor: AppColors.black,
         title: Text(
           data.titel,
@@ -240,7 +243,7 @@ class _DetailfilmscreenState extends State<Detailfilmscreen> {
                 child: Image.network(
                   path,
                   width: 100,
-                  height: 120,
+                  height: 110,
                   fit: BoxFit.cover,
                 ),
               ),
